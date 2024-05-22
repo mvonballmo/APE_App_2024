@@ -39,14 +39,6 @@ public class SpaceshipTests
 
     private IServiceProvider CreateContainer()
     {
-        var serviceCollection = new ServiceCollection();
-
-        serviceCollection
-            .AddSingleton<Spaceship>()
-            .AddSingleton<Pilot>()
-            .AddSingleton<Weapon>()
-            .AddSingleton<Projectile>();
-
-        return serviceCollection.BuildServiceProvider();
+        return ContainerTools.CreateContainer();
     }
 }
