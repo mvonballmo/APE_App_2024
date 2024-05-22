@@ -1,3 +1,5 @@
+using Microsoft.Extensions.DependencyInjection;
+
 namespace Stuff.Core.Tests;
 
 public class SpaceshipTests
@@ -10,13 +12,41 @@ public class SpaceshipTests
     [Test]
     public void TestFightDetonatesProjectile()
     {
-        var projectile = new Projectile();
-        var spaceship = new Spaceship(new Pilot(), new Weapon(projectile));
+        var serviceProvider = CreateContainer();
+        var spaceship = serviceProvider.GetRequiredService<Spaceship>();
+        var projectile = serviceProvider.GetRequiredService<Projectile>();
         
         Assert.That(projectile.Detonated, Is.False);
 
         spaceship.Fight();
         
         Assert.That(projectile.Detonated, Is.True);
+    }
+
+    [Test]
+    public void TestPilotPulledTrigger()
+    {
+        var serviceProvider = CreateContainer();
+        var spaceship = serviceProvider.GetRequiredService<Spaceship>();
+        var pilot = serviceProvider.GetRequiredService<Pilot>();
+        
+        Assert.That(pilot.PulledTrigger, Is.False);
+        
+        spaceship.Fight();
+        
+        Assert.That(pilot.PulledTrigger, Is.True);
+    }
+
+    private IServiceProvider CreateContainer()
+    {
+        var serviceCollection = new ServiceCollection();
+
+        serviceCollection
+            .AddSingleton<Spaceship>()
+            .AddSingleton<Pilot>()
+            .AddSingleton<Weapon>()
+            .AddSingleton<Projectile>();
+
+        return serviceCollection.BuildServiceProvider();
     }
 }
