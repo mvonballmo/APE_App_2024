@@ -1,20 +1,33 @@
-﻿using Core;
+﻿using System.Xml.Linq;
+using Core;
 
 namespace Maui2024;
 
 public partial class MainPage : ContentPage
 {
-    int count = 0;
+    private readonly MainPageViewModel _viewModel;
 
-    public MainPage()
+    public MainPage(MainPageViewModel viewModel)
     {
         InitializeComponent();
+
+        BindingContext = _viewModel = viewModel;
     }
 
     private void OnCounterClicked(object? sender, EventArgs e)
     {
-        var mainPageViewModel = (MainPageViewModel)BindingContext;
+        _viewModel.Increment();
+    }
 
-        mainPageViewModel.Increment();
+    private async void OnSaveClicked(object? sender, EventArgs e)
+    {
+        _viewModel.Save();
+        
+        await DisplayAlert("Save complete", "Your data has been saved.", "OK");
+    }
+
+    private MainPageViewModel GetMainPageViewModel()
+    {
+        return (MainPageViewModel)BindingContext;
     }
 }

@@ -5,7 +5,7 @@ public class MainPageViewModelTests
     [Test]
     public void TestSettingFirstName()
     {
-        var viewModel = new MainPageViewModel();
+        var viewModel = CreateMainPageViewModel();
         
         Assert.That(viewModel.FirstName, Is.EqualTo("Schweiz"));
 
@@ -17,7 +17,7 @@ public class MainPageViewModelTests
     [Test]
     public void TestSettingLastName()
     {
-        var viewModel = new MainPageViewModel();
+        var viewModel = CreateMainPageViewModel();
         
         Assert.That(viewModel.LastName, Is.EqualTo("Svizzera"));
 
@@ -29,9 +29,9 @@ public class MainPageViewModelTests
     [Test]
     public void TestIncrementTriggersChange()
     {
-        var viewModel = new MainPageViewModel();
+        var viewModel = CreateMainPageViewModel();
 
-        var notifications = new List<string>();
+        var notifications = new List<string?>();
 
         viewModel.PropertyChanged += (_, args) => notifications.Add(args.PropertyName);
 
@@ -46,9 +46,9 @@ public class MainPageViewModelTests
     [Test]
     public void TestFullNameOnlyTriggeredWhenChangeHappens()
     {
-        var viewModel = new MainPageViewModel();
+        var viewModel = CreateMainPageViewModel();
 
-        var notifications = new List<string>();
+        var notifications = new List<string?>();
 
         viewModel.PropertyChanged += (_, args) => notifications.Add(args.PropertyName);
 
@@ -63,5 +63,10 @@ public class MainPageViewModelTests
         viewModel.LastName = "von Ballmoos";
 
         Assert.That(notifications, Is.EquivalentTo(Array.Empty<string>()));
+    }
+
+    private static MainPageViewModel CreateMainPageViewModel()
+    {
+        return new MainPageViewModel(new SettingsModel());
     }
 }

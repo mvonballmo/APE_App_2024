@@ -3,10 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:core="clr-namespace:Core;assembly=Core"
              x:Class="Maui2024.MainPage">
-
-    <ContentPage.BindingContext>
-        <core:MainPageViewModel />
-    </ContentPage.BindingContext>
     
     <ScrollView>
         <VerticalStackLayout
@@ -40,11 +36,25 @@
                    Placeholder="Please enter your last name"
             />
             
-            <Button
-                Text="Increment Count" 
-                SemanticProperties.Hint="Increments the count"
-                Clicked="OnCounterClicked"
-                HorizontalOptions="Fill" />
+            <Grid ColumnSpacing="20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <Button
+                    Text="Increment Count" 
+                    SemanticProperties.Hint="Increments the count"
+                    Clicked="OnCounterClicked"
+                    HorizontalOptions="End" />
+
+                <Button
+                    Grid.Column="1"
+                    Text="Save" 
+                    SemanticProperties.Hint="Saves all data"
+                    Clicked="OnSaveClicked"
+                    HorizontalOptions="Start" />
+            </Grid>
         </VerticalStackLayout>
     </ScrollView>
 

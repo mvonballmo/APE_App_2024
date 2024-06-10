@@ -5,9 +5,16 @@ namespace Core;
 
 public class MainPageViewModel : INotifyPropertyChanged
 {
-    private string _firstName = "Schweiz";
-    private string _lastName = "Svizzera";
+    private readonly SettingsModel _model; 
+    private string _firstName;
+    private string _lastName;
     private int _count;
+
+    public MainPageViewModel(SettingsModel model)
+    {
+        _model = model;
+        Load();
+    }
 
     public string FirstName
     {
@@ -43,10 +50,23 @@ public class MainPageViewModel : INotifyPropertyChanged
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
-
     public void Increment()
     {
         Count += 1;
+    }
+
+    private void Load()
+    {
+        _firstName = _model.FirstName;
+        _lastName = _model.LastName;
+        _count = _model.Count;
+    }
+
+    public void Save()
+    {
+        _model.FirstName = FirstName;
+        _model.LastName = LastName;
+        _model.Count = Count;
     }
 
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
