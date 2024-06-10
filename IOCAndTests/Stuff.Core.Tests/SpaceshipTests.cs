@@ -39,6 +39,6 @@ public class SpaceshipTests
 
     private IServiceProvider CreateContainer()
     {
-        return ContainerTools.CreateContainer();
+        return ContainerTools.CreateServiceProvider();
     }
 }

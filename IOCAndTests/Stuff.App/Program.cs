@@ -3,7 +3,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Stuff.Core;
 
-var serviceProvider = ContainerTools.CreateContainer();
+var serviceProvider = ContainerTools.CreateServiceProvider();
 
 var spaceship = serviceProvider.GetRequiredService<Spaceship>();
 var projectile = serviceProvider.GetRequiredService<Projectile>();

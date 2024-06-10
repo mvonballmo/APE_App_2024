@@ -2,7 +2,7 @@ namespace Stuff.Core;
 
 public class Weapon
 {
-    private readonly Projectile _projectile;
+    private readonly IProjectile _projectile;
 
     public Weapon(Projectile projectile)
     {
