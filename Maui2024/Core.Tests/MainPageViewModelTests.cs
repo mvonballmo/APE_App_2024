@@ -27,6 +27,23 @@ public class MainPageViewModelTests
     }
 
     [Test]
+    public void TestIncrementTriggersChange()
+    {
+        var viewModel = new MainPageViewModel();
+
+        var notifications = new List<string>();
+
+        viewModel.PropertyChanged += (_, args) => notifications.Add(args.PropertyName);
+
+        Assert.That(viewModel.Count, Is.EqualTo(0));
+
+        viewModel.Increment();
+
+        Assert.That(viewModel.Count, Is.EqualTo(1));
+        Assert.That(notifications, Is.EquivalentTo(new [] {"Count"}));
+    }
+
+    [Test]
     public void TestFullNameOnlyTriggeredWhenChangeHappens()
     {
         var viewModel = new MainPageViewModel();

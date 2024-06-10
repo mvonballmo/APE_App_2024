@@ -13,22 +13,36 @@
             Padding="30,0"
             Spacing="25">
 
-            <Label Text="{Binding FullName}"
-                   Style="{StaticResource Headline}"
-                   />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                
+                <Label Text="{Binding FullName}"
+                       Style="{StaticResource Headline}"
+                       HorizontalOptions="Start"/>
+            
+                <Label Text="{Binding Count}"
+                       Style="{StaticResource Headline}"
+                       HorizontalOptions="End"
+                       Grid.Column="1"/>
+            </Grid>
+            
+            <HorizontalStackLayout HorizontalOptions="Fill" BackgroundColor="Beige">
+            </HorizontalStackLayout>
             
             <Entry Text="{Binding FirstName, Mode=TwoWay}"
                    Placeholder="Please enter your first name"
-                   />
+            />
             
             <Entry Text="{Binding LastName, Mode=TwoWay}"
                    Placeholder="Please enter your last name"
             />
             
             <Button
-                x:Name="CounterBtn"
-                Text="Click me" 
-                SemanticProperties.Hint="Counts the number of times you click"
+                Text="Increment Count" 
+                SemanticProperties.Hint="Increments the count"
                 Clicked="OnCounterClicked"
                 HorizontalOptions="Fill" />
         </VerticalStackLayout>
