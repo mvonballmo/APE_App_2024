@@ -13,10 +13,7 @@
             Padding="30,0"
             Spacing="25">
 
-            <Label Text="{Binding FirstName}"
-                   Style="{StaticResource Headline}"
-                   />
-            <Label Text="{Binding LastName}" 
+            <Label Text="{Binding FullName}"
                    Style="{StaticResource Headline}"
                    />
             

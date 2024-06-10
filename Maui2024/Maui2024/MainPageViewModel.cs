@@ -18,6 +18,7 @@ public class MainPageViewModel : INotifyPropertyChanged
                 _firstName = value;
                 
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FirstName)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FullName)));
             }
         }
     }
@@ -32,9 +33,12 @@ public class MainPageViewModel : INotifyPropertyChanged
                 _lastName = value;
                 
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(LastName)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FullName)));
             }
         }
     }
+
+    public object FullName => $"{LastName}, {FirstName}";
 
     public event PropertyChangedEventHandler? PropertyChanged;
 }
