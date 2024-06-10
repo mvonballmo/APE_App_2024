@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace Core;
 
-public class MainPageViewModel : INotifyPropertyChanged
+public class MainPageViewModel : ViewModelBase
 {
     private readonly SettingsModel _model; 
     private string _firstName;
@@ -55,8 +55,6 @@ public class MainPageViewModel : INotifyPropertyChanged
         set => SetField(ref _count, value);
     }
 
-    public event PropertyChangedEventHandler? PropertyChanged;
-
     public void Increment()
     {
         Count += 1;
@@ -67,22 +65,5 @@ public class MainPageViewModel : INotifyPropertyChanged
         _model.FirstName = FirstName;
         _model.LastName = LastName;
         _model.Count = Count;
-    }
-
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-
-    protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
-    {
-        if (EqualityComparer<T>.Default.Equals(field, value))
-        {
-            return false;
-        }
-        
-        field = value;
-        OnPropertyChanged(propertyName);
-        return true;
     }
 }
