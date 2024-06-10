@@ -10,10 +10,17 @@ public class MainPageViewModel : INotifyPropertyChanged
     private string _lastName;
     private int _count;
 
+    public MainPageViewModel()
+    {
+        // For XAML types
+    }
+    
     public MainPageViewModel(SettingsModel model)
     {
         _model = model;
-        Load();
+        _firstName = _model.FirstName;
+        _lastName = _model.LastName;
+        _count = _model.Count;
     }
 
     public string FirstName
@@ -53,13 +60,6 @@ public class MainPageViewModel : INotifyPropertyChanged
     public void Increment()
     {
         Count += 1;
-    }
-
-    private void Load()
-    {
-        _firstName = _model.FirstName;
-        _lastName = _model.LastName;
-        _count = _model.Count;
     }
 
     public void Save()

@@ -25,9 +25,4 @@ public partial class MainPage : ContentPage
         
         await DisplayAlert("Save complete", "Your data has been saved.", "OK");
     }
-
-    private MainPageViewModel GetMainPageViewModel()
-    {
-        return (MainPageViewModel)BindingContext;
-    }
 }

@@ -4,6 +4,10 @@
              xmlns:core="clr-namespace:Core;assembly=Core"
              x:Class="Maui2024.MainPage">
     
+    <ContentPage.BindingContext>
+        <core:MainPageViewModel />
+    </ContentPage.BindingContext>
+
     <ScrollView>
         <VerticalStackLayout
             Padding="30,0"
@@ -11,8 +15,8 @@
 
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 
                 <Label Text="{Binding FullName}"
@@ -24,9 +28,6 @@
                        HorizontalOptions="End"
                        Grid.Column="1"/>
             </Grid>
-            
-            <HorizontalStackLayout HorizontalOptions="Fill" BackgroundColor="Beige">
-            </HorizontalStackLayout>
             
             <Entry Text="{Binding FirstName, Mode=TwoWay}"
                    Placeholder="Please enter your first name"
