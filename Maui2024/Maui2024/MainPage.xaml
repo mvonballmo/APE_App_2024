@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:maui2024="clr-namespace:Maui2024"
+             xmlns:core="clr-namespace:Core;assembly=Core"
              x:Class="Maui2024.MainPage">
 
     <ContentPage.BindingContext>
-        <maui2024:MainPageViewModel />
+        <core:MainPageViewModel />
     </ContentPage.BindingContext>
     
     <ScrollView>

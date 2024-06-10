@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace Maui2024;
+namespace Core;
 
 public class MainPageViewModel : INotifyPropertyChanged
 {
@@ -13,7 +13,7 @@ public class MainPageViewModel : INotifyPropertyChanged
         get => _firstName;
         set
         {
-            if (SetField(ref _lastName, value))
+            if (SetField(ref _firstName, value))
             {
                 OnPropertyChanged(nameof(FullName));
             }
