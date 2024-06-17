@@ -11,6 +11,14 @@ public class LocalStorageServiceTests : TestsBase
     {
         var serviceProvider = CreateServiceProvider();
         var localStorage = serviceProvider.GetRequiredService<ILocalStorage>();
-        
+
+        var settingsModel = new SettingsModel
+        {
+            FirstName = "John",
+            LastName = "Doe",
+            Count = 4
+        };
+
+        localStorage.Save(settingsModel);
     }
 }

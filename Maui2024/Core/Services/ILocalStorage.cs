@@ -2,9 +2,5 @@ namespace Core.Services;
 
 public interface ILocalStorage
 {
-    
-}
-
-public class SqliteLocalStorage : ILocalStorage
-{
+    void Save(SettingsModel settingsModel);
 }
