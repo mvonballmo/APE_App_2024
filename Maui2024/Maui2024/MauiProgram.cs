@@ -1,4 +1,5 @@
 ﻿using Core;
+using Core.Services;
 using Microsoft.Extensions.Logging;
 
 namespace Maui2024;
@@ -18,6 +19,7 @@ public static class MauiProgram
 
 
         builder.Services
+            .AddDefaultServices()
             .AddSingleton<MainPage>()
             .AddSingleton<MainPageViewModel>()
             .AddSingleton<SettingsModel>();
