@@ -10,7 +10,7 @@ public class SqliteLocalStorage : ILocalStorage
     private static string DatabasePath =>
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Maui2024.db3");
 
-    private SQLiteConnection _connection;
+    private readonly SQLiteConnection _connection;
 
     public SqliteLocalStorage()
     {
@@ -23,6 +23,12 @@ public class SqliteLocalStorage : ILocalStorage
         {
             _connection.CreateTable<SettingsModel>();
         }
+    }
+
+    public IEnumerable<SettingsModel> LoadAll()
+    {
+        var table = _connection.Table<SettingsModel>();
+        return table.ToList();
     }
 
     public void Save(SettingsModel settingsModel)

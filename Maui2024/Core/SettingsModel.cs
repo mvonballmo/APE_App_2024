@@ -4,8 +4,10 @@ namespace Core;
 
 public class SettingsModel
 {
-    [PrimaryKey, AutoIncrement]
-    public int Id { get; set; }
+    [PrimaryKey]
+    [AutoIncrement]
+    [NotNull]
+    public int? Id { get; set; }
 
     public string FirstName { get; set; } = "Hans";
 

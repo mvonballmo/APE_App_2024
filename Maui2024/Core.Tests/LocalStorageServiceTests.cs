@@ -19,12 +19,23 @@ public class LocalStorageServiceTests : TestsBase
             Count = 4
         };
 
+        Assert.That(settingsModel.Id, Is.Null);
+
         localStorage.Save(settingsModel);
 
         Assert.That(settingsModel.Id, Is.Not.Zero);
 
-        var loadedSettingsModel = localStorage.Load(settingsModel.Id);
+        var loadedSettingsModel = localStorage.Load(settingsModel.Id.Value);
 
         Assert.That(loadedSettingsModel.Id, Is.EqualTo(settingsModel.Id));
+    }
+
+    [Test]
+    public void TestLoadAll()
+    {
+        var serviceProvider = CreateServiceProvider();
+        var localStorage = serviceProvider.GetRequiredService<ILocalStorage>();
+
+        var settingsModels = localStorage.LoadAll().ToList();
     }
 }
