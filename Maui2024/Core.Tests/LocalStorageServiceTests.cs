@@ -25,6 +25,30 @@ public class LocalStorageServiceTests : TestsBase
         Assert.That(loadedSettingsModel.Id, Is.EqualTo(settingsModel.Id));
     }
 
+    [Test]
+    public void TestSaveAndTryLoad()
+    {
+        var serviceProvider = CreateServiceProvider();
+        var localStorage = serviceProvider.GetRequiredService<ILocalStorage>();
+
+        var settingsModel = CreateSettingsModel();
+
+        Assert.That(settingsModel.Id, Is.Null);
+
+        localStorage.Save(settingsModel);
+
+        Assert.That(settingsModel.Id, Is.Not.Zero);
+
+        var loaded = localStorage.TryLoad(settingsModel.Id.Value, out var loadedSettingsModel);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(loaded, $"Could not load item with Id = [{settingsModel.Id}]");
+
+            Assert.That(loadedSettingsModel.Id, Is.EqualTo(settingsModel.Id));
+        });
+    }
+
     private static SettingsModel CreateSettingsModel()
     {
         return new SettingsModel

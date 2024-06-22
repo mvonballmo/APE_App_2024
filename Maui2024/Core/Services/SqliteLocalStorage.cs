@@ -19,24 +19,30 @@ public class SqliteLocalStorage : ILocalStorage
         }
     }
 
+    /// <inheritdoc/>
     public IEnumerable<SettingsModel> LoadAll()
     {
         var table = _connection.Table<SettingsModel>();
         return table.ToList();
     }
 
+    /// <inheritdoc/>
     public void DeleteAll()
     {
         _connection.DeleteAll<SettingsModel>();
     }
 
+    /// <inheritdoc/>
     public void Save(SettingsModel settingsModel)
     {
         _connection.InsertOrReplace(settingsModel);
     }
 
-    public SettingsModel Load(int id)
+    /// <inheritdoc/>
+    public bool TryLoad(int id, out SettingsModel item)
     {
-        return _connection.Get<SettingsModel>(id);
+        item = _connection.Find<SettingsModel>(id);
+
+        return item != null;
     }
 }
