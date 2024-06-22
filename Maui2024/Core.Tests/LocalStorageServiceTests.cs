@@ -7,7 +7,7 @@ namespace Core.Tests;
 public class LocalStorageServiceTests : TestsBase
 {
     [Test]
-    public void TestSave()
+    public void TestSaveAndLoad()
     {
         var serviceProvider = CreateServiceProvider();
         var localStorage = serviceProvider.GetRequiredService<ILocalStorage>();
@@ -20,5 +20,11 @@ public class LocalStorageServiceTests : TestsBase
         };
 
         localStorage.Save(settingsModel);
+
+        Assert.That(settingsModel.Id, Is.Not.Zero);
+
+        var loadedSettingsModel = localStorage.Load(settingsModel.Id);
+
+        Assert.That(loadedSettingsModel.Id, Is.EqualTo(settingsModel.Id));
     }
 }

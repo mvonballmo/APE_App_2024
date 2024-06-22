@@ -29,4 +29,9 @@ public class SqliteLocalStorage : ILocalStorage
     {
         _connection.InsertOrReplace(settingsModel);
     }
+
+    public SettingsModel Load(int id)
+    {
+        return _connection.Get<SettingsModel>(id);
+    }
 }
