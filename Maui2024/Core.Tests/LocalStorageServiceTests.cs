@@ -12,12 +12,7 @@ public class LocalStorageServiceTests : TestsBase
         var serviceProvider = CreateServiceProvider();
         var localStorage = serviceProvider.GetRequiredService<ILocalStorage>();
 
-        var settingsModel = new SettingsModel
-        {
-            FirstName = "John",
-            LastName = "Doe",
-            Count = 4
-        };
+        var settingsModel = CreateSettingsModel();
 
         Assert.That(settingsModel.Id, Is.Null);
 
@@ -30,12 +25,35 @@ public class LocalStorageServiceTests : TestsBase
         Assert.That(loadedSettingsModel.Id, Is.EqualTo(settingsModel.Id));
     }
 
+    private static SettingsModel CreateSettingsModel()
+    {
+        return new SettingsModel
+        {
+            FirstName = "John",
+            LastName = "Doe",
+            Count = 4
+        };
+    }
+
     [Test]
-    public void TestLoadAll()
+    public void TestDeleteAndLoadAll()
     {
         var serviceProvider = CreateServiceProvider();
         var localStorage = serviceProvider.GetRequiredService<ILocalStorage>();
 
+        localStorage.DeleteAll();
+
         var settingsModels = localStorage.LoadAll().ToList();
+
+        Assert.That(settingsModels.Count, Is.EqualTo(0));
+
+        for (var i = 0; i < 5; i++)
+        {
+            localStorage.Save(CreateSettingsModel());
+        }
+
+        settingsModels = localStorage.LoadAll().ToList();
+
+        Assert.That(settingsModels.Count, Is.EqualTo(5));
     }
 }

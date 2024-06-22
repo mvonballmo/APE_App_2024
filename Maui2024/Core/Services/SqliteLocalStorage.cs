@@ -31,6 +31,11 @@ public class SqliteLocalStorage : ILocalStorage
         return table.ToList();
     }
 
+    public void DeleteAll()
+    {
+        _connection.DeleteAll<SettingsModel>();
+    }
+
     public void Save(SettingsModel settingsModel)
     {
         _connection.InsertOrReplace(settingsModel);
