@@ -56,4 +56,10 @@ public class LocalStorageServiceTests : TestsBase
 
         Assert.That(settingsModels.Count, Is.EqualTo(5));
     }
+
+    protected override IServiceCollection AddServices(IServiceCollection serviceCollection)
+    {
+        return base.AddServices(serviceCollection)
+            .AddSingleton(new LocalStorageSettings { DatabaseFilename = "Maui2024Tests.db3" });
+    }
 }

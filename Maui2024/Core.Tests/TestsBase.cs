@@ -8,7 +8,7 @@ public class TestsBase
     protected IServiceProvider CreateServiceProvider()
     {
         var defaultServiceCollection = CoreServiceProviderExtensions.CreateDefaultServiceCollection();
-        
+
         return AddServices(defaultServiceCollection)
             .BuildServiceProvider();
     }

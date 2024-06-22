@@ -4,17 +4,11 @@ namespace Core.Services;
 
 public class SqliteLocalStorage : ILocalStorage
 {
-    /// <summary>
-    /// Gets the static path to the database. The <see cref="Environment.SpecialFolder"/> is used to resolve the right path.
-    /// </summary>
-    private static string DatabasePath =>
-        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Maui2024.db3");
-
     private readonly SQLiteConnection _connection;
 
-    public SqliteLocalStorage()
+    public SqliteLocalStorage(LocalStorageSettings settings)
     {
-        var options = new SQLiteConnectionString(DatabasePath);
+        var options = new SQLiteConnectionString(settings.DatabasePath);
         _connection = new SQLiteConnection(options);
 
         // Check whether our table already exists. If not, we're creating it here.
