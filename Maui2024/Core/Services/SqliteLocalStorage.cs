@@ -27,15 +27,15 @@ public class SqliteLocalStorage : ILocalStorage
     }
 
     /// <inheritdoc/>
-    public void DeleteAll()
+    public bool DeleteAll()
     {
-        _connection.DeleteAll<SettingsModel>();
+        return _connection.DeleteAll<SettingsModel>() >= 0;
     }
 
     /// <inheritdoc/>
-    public void Save(SettingsModel settingsModel)
+    public bool Save(SettingsModel settingsModel)
     {
-        _connection.InsertOrReplace(settingsModel);
+        return _connection.InsertOrReplace(settingsModel) == 1;
     }
 
     /// <inheritdoc/>

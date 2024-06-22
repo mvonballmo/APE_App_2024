@@ -16,9 +16,12 @@ public class LocalStorageServiceTests : TestsBase
 
         Assert.That(settingsModel.Id, Is.Null);
 
-        localStorage.Save(settingsModel);
-
-        Assert.That(settingsModel.Id, Is.Not.Zero);
+        var saved = localStorage.Save(settingsModel);
+        Assert.Multiple(() =>
+        {
+            Assert.That(saved, "Object was not saved");
+            Assert.That(settingsModel.Id, Is.Not.Zero);
+        });
 
         var loadedSettingsModel = localStorage.Load(settingsModel.Id.Value);
 
@@ -35,28 +38,20 @@ public class LocalStorageServiceTests : TestsBase
 
         Assert.That(settingsModel.Id, Is.Null);
 
-        localStorage.Save(settingsModel);
-
-        Assert.That(settingsModel.Id, Is.Not.Zero);
+        var saved = localStorage.Save(settingsModel);
+        Assert.Multiple(() =>
+        {
+            Assert.That(saved, "Object was not saved");
+            Assert.That(settingsModel.Id, Is.Not.Zero);
+        });
 
         var loaded = localStorage.TryLoad(settingsModel.Id.Value, out var loadedSettingsModel);
 
         Assert.Multiple(() =>
         {
             Assert.That(loaded, $"Could not load item with Id = [{settingsModel.Id}]");
-
             Assert.That(loadedSettingsModel.Id, Is.EqualTo(settingsModel.Id));
         });
-    }
-
-    private static SettingsModel CreateSettingsModel()
-    {
-        return new SettingsModel
-        {
-            FirstName = "John",
-            LastName = "Doe",
-            Count = 4
-        };
     }
 
     [Test]
@@ -65,7 +60,9 @@ public class LocalStorageServiceTests : TestsBase
         var serviceProvider = CreateServiceProvider();
         var localStorage = serviceProvider.GetRequiredService<ILocalStorage>();
 
-        localStorage.DeleteAll();
+        var deleted = localStorage.DeleteAll();
+
+        Assert.That(deleted, "Could not delete all objects.");
 
         var settingsModels = localStorage.LoadAll().ToList();
 
@@ -73,7 +70,9 @@ public class LocalStorageServiceTests : TestsBase
 
         for (var i = 0; i < 5; i++)
         {
-            localStorage.Save(CreateSettingsModel());
+            var saved = localStorage.Save(CreateSettingsModel());
+
+            Assert.That(saved, "Object was not saved.");
         }
 
         settingsModels = localStorage.LoadAll().ToList();
@@ -85,5 +84,15 @@ public class LocalStorageServiceTests : TestsBase
     {
         return base.AddServices(serviceCollection)
             .AddSingleton(new LocalStorageSettings { DatabaseFilename = "Maui2024Tests.db3" });
+    }
+
+    private static SettingsModel CreateSettingsModel()
+    {
+        return new SettingsModel
+        {
+            FirstName = "John",
+            LastName = "Doe",
+            Count = 4
+        };
     }
 }
