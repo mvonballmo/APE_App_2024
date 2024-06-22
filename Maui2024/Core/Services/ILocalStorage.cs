@@ -9,7 +9,9 @@ public interface ILocalStorage
 
     bool Save(SettingsModel settingsModel);
 
-    IEnumerable<SettingsModel> LoadAll();
+    bool Delete(SettingsModel settingsModel);
+
+    IList<SettingsModel> LoadAll();
 
     bool DeleteAll();
 }

@@ -55,6 +55,36 @@ public class LocalStorageServiceTests : TestsBase
     }
 
     [Test]
+    public void TestSaveLoadAndDelete()
+    {
+        var serviceProvider = CreateServiceProvider();
+        var localStorage = serviceProvider.GetRequiredService<ILocalStorage>();
+
+        var settingsModel = CreateSettingsModel();
+
+        Assert.That(settingsModel.Id, Is.Null);
+
+        var saved = localStorage.Save(settingsModel);
+        Assert.Multiple(() =>
+        {
+            Assert.That(saved, "Object was not saved");
+            Assert.That(settingsModel.Id, Is.Not.Zero);
+        });
+
+        var loadedSettingsModel = localStorage.Load(settingsModel.Id.Value);
+
+        Assert.That(loadedSettingsModel.Id, Is.EqualTo(settingsModel.Id));
+
+        var deleted = localStorage.Delete(loadedSettingsModel);
+
+        Assert.That(deleted, "Object was not deleted.");
+
+        var loaded = localStorage.TryLoad(settingsModel.Id.Value, out loadedSettingsModel);
+
+        Assert.That(loaded, Is.False, "Object should no longer exist.");
+    }
+
+    [Test]
     public void TestDeleteAndLoadAll()
     {
         var serviceProvider = CreateServiceProvider();

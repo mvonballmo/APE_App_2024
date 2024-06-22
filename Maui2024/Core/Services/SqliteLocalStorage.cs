@@ -19,11 +19,15 @@ public class SqliteLocalStorage : ILocalStorage
         }
     }
 
-    /// <inheritdoc/>
-    public IEnumerable<SettingsModel> LoadAll()
+    public bool Delete(SettingsModel settingsModel)
     {
-        var table = _connection.Table<SettingsModel>();
-        return table.ToList();
+        return _connection.Delete<SettingsModel>(settingsModel.Id) == 1;
+    }
+
+    /// <inheritdoc/>
+    public IList<SettingsModel> LoadAll()
+    {
+        return _connection.Table<SettingsModel>().ToList();
     }
 
     /// <inheritdoc/>
