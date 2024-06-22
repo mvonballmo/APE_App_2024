@@ -6,11 +6,11 @@ public class MainPageViewModelTests
     public void TestSettingFirstName()
     {
         var viewModel = CreateMainPageViewModel();
-        
-        Assert.That(viewModel.FirstName, Is.EqualTo("Schweiz"));
+
+        Assert.That(viewModel.FirstName, Is.EqualTo("Hans"));
 
         viewModel.FirstName = "Marco";
-        
+
         Assert.That(viewModel.FirstName, Is.EqualTo("Marco"));
     }
 
@@ -18,11 +18,11 @@ public class MainPageViewModelTests
     public void TestSettingLastName()
     {
         var viewModel = CreateMainPageViewModel();
-        
-        Assert.That(viewModel.LastName, Is.EqualTo("Svizzera"));
+
+        Assert.That(viewModel.LastName, Is.EqualTo("Muster"));
 
         viewModel.LastName = "von Ballmoos";
-        
+
         Assert.That(viewModel.LastName, Is.EqualTo("von Ballmoos"));
     }
 
@@ -40,7 +40,7 @@ public class MainPageViewModelTests
         viewModel.Increment();
 
         Assert.That(viewModel.Count, Is.EqualTo(1));
-        Assert.That(notifications, Is.EquivalentTo(new [] {"Count"}));
+        Assert.That(notifications, Is.EquivalentTo(new[] { "Count" }));
     }
 
     [Test]
@@ -52,14 +52,14 @@ public class MainPageViewModelTests
 
         viewModel.PropertyChanged += (_, args) => notifications.Add(args.PropertyName);
 
-        Assert.That(viewModel.LastName, Is.EqualTo("Svizzera"));
+        Assert.That(viewModel.LastName, Is.EqualTo("Muster"));
 
         viewModel.LastName = "von Ballmoos";
 
-        Assert.That(notifications, Is.EquivalentTo(new [] {"LastName", "FullName"}));
+        Assert.That(notifications, Is.EquivalentTo(new[] { "LastName", "FullName" }));
 
         notifications.Clear();
-        
+
         viewModel.LastName = "von Ballmoos";
 
         Assert.That(notifications, Is.EquivalentTo(Array.Empty<string>()));

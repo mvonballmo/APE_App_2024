@@ -6,7 +6,10 @@ public class SettingsModel
 {
     [PrimaryKey, AutoIncrement]
     public int Id { get; set; }
-    public string FirstName { get; set; } = "Schweiz";
-    public string LastName { get; set; } = "Svizzera";
+
+    public string FirstName { get; set; } = "Hans";
+
+    public string LastName { get; set; } = "Muster";
+
     public int Count { get; set; }
 }
