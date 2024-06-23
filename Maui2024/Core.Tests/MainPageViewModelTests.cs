@@ -99,7 +99,7 @@ public class MainPageViewModelTests : TestsBase
 
         await viewModel.EnsureModelLoaded();
 
-        Assert.That(notifications, Is.EquivalentTo(new[] { "FirstName", "FullName", "LastName", "FullName", "Count", "IsReady" }));
+        Assert.That(notifications, Is.EquivalentTo(new[] { "SelectedItem", "FirstName", "FullName", "LastName", "FullName", "Count", "IsReady" }));
     }
 
     private async Task<MainPageViewModel> GetMainPageViewModel()

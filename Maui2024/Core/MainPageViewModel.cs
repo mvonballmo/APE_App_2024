@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.Input;
 using Core.Services;
 
@@ -5,11 +6,11 @@ namespace Core;
 
 public partial class MainPageViewModel : ViewModelBase
 {
-    private SettingsModel? _model;
     private readonly ILocalStorage _localStorage;
     private string _firstName = string.Empty;
     private string _lastName = string.Empty;
     private int _count;
+    private SettingsModel? _selectedItem;
 
     public MainPageViewModel()
     {
@@ -53,7 +54,32 @@ public partial class MainPageViewModel : ViewModelBase
         set => SetField(ref _count, value);
     }
 
-    public bool IsReady => _model != null;
+    public bool IsReady => SelectedItem != null;
+
+    public ObservableCollection<SettingsModel> Items { get; private set; } = new();
+
+    public SettingsModel? SelectedItem
+    {
+        get => _selectedItem;
+        set
+        {
+            if (SetField(ref _selectedItem, value))
+            {
+                if (value != null)
+                {
+                    FirstName = value.FirstName;
+                    LastName = value.LastName;
+                    Count = value.Count;
+                }
+                else
+                {
+                    FirstName = string.Empty;
+                    LastName = string.Empty;
+                    Count = 0;
+                }
+            }
+        }
+    }
 
     public void Increment()
     {
@@ -63,7 +89,7 @@ public partial class MainPageViewModel : ViewModelBase
     [RelayCommand]
     public async Task EnsureModelLoaded()
     {
-        if (_model == null)
+        if (Items.Count == 0)
         {
             try
             {
@@ -71,11 +97,17 @@ public partial class MainPageViewModel : ViewModelBase
 
                 var settingsModels = await _localStorage.LoadAll();
 
-                _model = settingsModels.FirstOrDefault() ?? new SettingsModel();
+                foreach (var settingsModel in settingsModels)
+                {
+                    Items.Add(settingsModel);
+                }
 
-                FirstName = _model.FirstName;
-                LastName = _model.LastName;
-                Count = _model.Count;
+                if (Items.Count == 0)
+                {
+                    Items.Add(new SettingsModel());
+                }
+
+                SelectedItem = Items.First();
 
                 OnPropertyChanged(nameof(IsReady));
             }
@@ -89,15 +121,17 @@ public partial class MainPageViewModel : ViewModelBase
 
     public async Task Save()
     {
-        if (_model == null)
+        var model = SelectedItem;
+
+        if (model == null)
         {
             throw new InvalidOperationException("Cannot save a non-existent model");
         }
 
-        _model.FirstName = FirstName;
-        _model.LastName = LastName;
-        _model.Count = Count;
+        model.FirstName = FirstName;
+        model.LastName = LastName;
+        model.Count = Count;
 
-        await _localStorage.Save(_model);
+        await _localStorage.Save(model);
     }
 }
