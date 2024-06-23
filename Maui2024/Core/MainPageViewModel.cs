@@ -134,4 +134,13 @@ public partial class MainPageViewModel : ViewModelBase
 
         await _localStorage.Save(model);
     }
+
+    public void Add()
+    {
+        var settingsModel = new SettingsModel();
+
+        Items.Add(settingsModel);
+
+        SelectedItem = settingsModel;
+    }
 }

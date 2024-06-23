@@ -70,6 +70,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"></ColumnDefinition>
                     <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
 
                 <Button
@@ -80,6 +81,14 @@
 
                 <Button
                     Grid.Column="1"
+                    Text="Add"
+                    SemanticProperties.Hint="Adds a new item"
+                    Clicked="OnAddClicked"
+                    IsEnabled="{Binding IsReady}"
+                    HorizontalOptions="Start" />
+
+                <Button
+                    Grid.Column="2"
                     Text="Save"
                     SemanticProperties.Hint="Saves all data"
                     Clicked="OnSaveClicked"

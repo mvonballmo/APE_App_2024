@@ -1,5 +1,4 @@
-﻿using System.Xml.Linq;
-using Core;
+﻿using Core;
 
 namespace Maui2024;
 
@@ -23,5 +22,10 @@ public partial class MainPage : ContentPage
     {
         await _viewModel.Save();
         await DisplayAlert("Save complete", "Your data has been saved.", "OK");
+    }
+
+    private void OnAddClicked(object? sender, EventArgs e)
+    {
+        _viewModel.Add();
     }
 }
