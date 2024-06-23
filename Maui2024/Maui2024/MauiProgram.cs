@@ -20,9 +20,7 @@ public static class MauiProgram
 
         builder.Services
             .AddDefaultServices()
-            .AddSingleton<MainPage>()
-            .AddSingleton<MainPageViewModel>()
-            .AddSingleton<SettingsModel>();
+            .AddSingleton<MainPage>();
 #if DEBUG
         builder.Logging.AddDebug();
 #endif

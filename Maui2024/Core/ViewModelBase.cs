@@ -5,7 +5,8 @@ namespace Core;
 
 public abstract class ViewModelBase : INotifyPropertyChanged
 {
-    public virtual event PropertyChangedEventHandler? PropertyChanged;
+    /// <inheritdoc/>
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
@@ -18,7 +19,7 @@ public abstract class ViewModelBase : INotifyPropertyChanged
         {
             return false;
         }
-        
+
         field = value;
         OnPropertyChanged(propertyName);
         return true;

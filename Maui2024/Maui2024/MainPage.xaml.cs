@@ -21,8 +21,7 @@ public partial class MainPage : ContentPage
 
     private async void OnSaveClicked(object? sender, EventArgs e)
     {
-        _viewModel.Save();
-        
+        await _viewModel.Save();
         await DisplayAlert("Save complete", "Your data has been saved.", "OK");
     }
 }

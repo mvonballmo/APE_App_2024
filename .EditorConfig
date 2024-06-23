@@ -5,6 +5,7 @@ indent_size = 4
 indent_style = space
 trim_trailing_whitespace = true
 insert_final_newline = false
+max_line_length = 200
 
 # We do not set the line-endings explicitly. Instead, we let the OS and Git/.gitattributes files decide how to do this.
 #end_of_line = crlf

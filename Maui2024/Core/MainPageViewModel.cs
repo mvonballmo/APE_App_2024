@@ -1,11 +1,11 @@
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using Core.Services;
 
 namespace Core;
 
 public class MainPageViewModel : ViewModelBase
 {
-    private readonly SettingsModel _model; 
+    private readonly SettingsModel _model;
+    private readonly ILocalStorage _localStorage;
     private string _firstName;
     private string _lastName;
     private int _count;
@@ -14,10 +14,12 @@ public class MainPageViewModel : ViewModelBase
     {
         // For XAML types
     }
-    
-    public MainPageViewModel(SettingsModel model)
+
+    public MainPageViewModel(SettingsModel model, ILocalStorage localStorage)
     {
-        _model = model;
+        _model = model ?? throw new ArgumentNullException(nameof(model));
+        _localStorage = localStorage ?? throw new ArgumentNullException(nameof(localStorage));
+
         _firstName = _model.FirstName;
         _lastName = _model.LastName;
         _count = _model.Count;
@@ -60,10 +62,12 @@ public class MainPageViewModel : ViewModelBase
         Count += 1;
     }
 
-    public void Save()
+    public async Task Save()
     {
         _model.FirstName = FirstName;
         _model.LastName = LastName;
         _model.Count = Count;
+
+        await _localStorage.Save(_model);
     }
 }

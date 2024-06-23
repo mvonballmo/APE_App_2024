@@ -13,7 +13,9 @@ public static class CoreServiceProviderExtensions
     {
         return serviceCollection
             .AddSingleton<ILocalStorage, SqliteLocalStorage>()
-            .AddSingleton<LocalStorageSettings>();
+            .AddSingleton<LocalStorageSettings>()
+            .AddSingleton<SettingsModel>()
+            .AddTransient<MainPageViewModel>();
     }
 
     public static IServiceProvider CreateDefaultServiceProvider()

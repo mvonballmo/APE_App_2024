@@ -1,6 +1,9 @@
+using Core.Services;
+using Microsoft.Extensions.DependencyInjection;
+
 namespace Core.Tests;
 
-public class MainPageViewModelTests
+public class MainPageViewModelTests : TestsBase
 {
     [Test]
     public void TestSettingFirstName()
@@ -65,8 +68,27 @@ public class MainPageViewModelTests
         Assert.That(notifications, Is.EquivalentTo(Array.Empty<string>()));
     }
 
-    private static MainPageViewModel CreateMainPageViewModel()
+    [Test]
+    public async Task TestSave()
     {
-        return new MainPageViewModel(new SettingsModel());
+        var serviceProvider = CreateServiceProvider();
+        var viewModel = serviceProvider.GetRequiredService<MainPageViewModel>();
+        var settingsModel = serviceProvider.GetRequiredService<SettingsModel>();
+        var localStorage = serviceProvider.GetRequiredService<ILocalStorage>();
+
+        Assert.That(settingsModel.Id, Is.Null);
+
+        await viewModel.Save();
+
+        Assert.That(settingsModel.Id, Is.Not.Null);
+
+        var loadedSettingsModel = await localStorage.TryLoad(settingsModel.Id.Value);
+
+        Assert.That(loadedSettingsModel, Is.Not.Null.And.Property(nameof(SettingsModel.Id)).EqualTo(settingsModel.Id));
+    }
+
+    private MainPageViewModel CreateMainPageViewModel()
+    {
+        return CreateServiceProvider().GetRequiredService<MainPageViewModel>();
     }
 }
