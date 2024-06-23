@@ -1,12 +1,20 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:core="clr-namespace:Core;assembly=Core"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="Maui2024.MainPage">
-    
+
     <ContentPage.BindingContext>
         <core:MainPageViewModel />
     </ContentPage.BindingContext>
+
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior
+            EventName="Appearing"
+            Command="{Binding EnsureModelLoadedCommand}" />
+    </ContentPage.Behaviors>
 
     <ScrollView>
         <VerticalStackLayout
@@ -18,25 +26,23 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                
+
                 <Label Text="{Binding FullName}"
                        Style="{StaticResource Headline}"
-                       HorizontalOptions="Start"/>
-            
+                       HorizontalOptions="Start" />
+
                 <Label Text="{Binding Count}"
                        Style="{StaticResource Headline}"
                        HorizontalOptions="End"
-                       Grid.Column="1"/>
+                       Grid.Column="1" />
             </Grid>
-            
+
             <Entry Text="{Binding FirstName, Mode=TwoWay}"
-                   Placeholder="Please enter your first name"
-            />
-            
+                   Placeholder="Please enter your first name" />
+
             <Entry Text="{Binding LastName, Mode=TwoWay}"
-                   Placeholder="Please enter your last name"
-            />
-            
+                   Placeholder="Please enter your last name" />
+
             <Grid ColumnSpacing="20">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"></ColumnDefinition>
@@ -44,16 +50,17 @@
                 </Grid.ColumnDefinitions>
 
                 <Button
-                    Text="Increment Count" 
+                    Text="Increment Count"
                     SemanticProperties.Hint="Increments the count"
                     Clicked="OnCounterClicked"
                     HorizontalOptions="End" />
 
                 <Button
                     Grid.Column="1"
-                    Text="Save" 
+                    Text="Save"
                     SemanticProperties.Hint="Saves all data"
                     Clicked="OnSaveClicked"
+                    IsEnabled="{Binding IsReady}"
                     HorizontalOptions="Start" />
             </Grid>
         </VerticalStackLayout>

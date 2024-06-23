@@ -13,5 +13,5 @@ public class SettingsModel
 
     public string LastName { get; set; } = "Muster";
 
-    public int Count { get; set; }
+    public int Count { get; set; } = 1;
 }

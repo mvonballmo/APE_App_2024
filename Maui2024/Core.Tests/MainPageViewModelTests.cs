@@ -1,14 +1,13 @@
 using Core.Services;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.Tests;
 
 public class MainPageViewModelTests : TestsBase
 {
     [Test]
-    public void TestSettingFirstName()
+    public async Task TestSettingFirstName()
     {
-        var viewModel = CreateMainPageViewModel();
+        var viewModel = await GetMainPageViewModel();
 
         Assert.That(viewModel.FirstName, Is.EqualTo("Hans"));
 
@@ -18,9 +17,9 @@ public class MainPageViewModelTests : TestsBase
     }
 
     [Test]
-    public void TestSettingLastName()
+    public async Task TestSettingLastName()
     {
-        var viewModel = CreateMainPageViewModel();
+        var viewModel = await GetMainPageViewModel();
 
         Assert.That(viewModel.LastName, Is.EqualTo("Muster"));
 
@@ -30,26 +29,26 @@ public class MainPageViewModelTests : TestsBase
     }
 
     [Test]
-    public void TestIncrementTriggersChange()
+    public async Task TestIncrementTriggersChange()
     {
-        var viewModel = CreateMainPageViewModel();
+        var viewModel = await GetMainPageViewModel();
 
         var notifications = new List<string?>();
 
         viewModel.PropertyChanged += (_, args) => notifications.Add(args.PropertyName);
 
-        Assert.That(viewModel.Count, Is.EqualTo(0));
+        Assert.That(viewModel.Count, Is.EqualTo(1));
 
         viewModel.Increment();
 
-        Assert.That(viewModel.Count, Is.EqualTo(1));
+        Assert.That(viewModel.Count, Is.EqualTo(2));
         Assert.That(notifications, Is.EquivalentTo(new[] { "Count" }));
     }
 
     [Test]
-    public void TestFullNameOnlyTriggeredWhenChangeHappens()
+    public async Task TestFullNameOnlyTriggeredWhenChangeHappens()
     {
-        var viewModel = CreateMainPageViewModel();
+        var viewModel = await GetMainPageViewModel();
 
         var notifications = new List<string?>();
 
@@ -72,23 +71,50 @@ public class MainPageViewModelTests : TestsBase
     public async Task TestSave()
     {
         var serviceProvider = CreateServiceProvider();
-        var viewModel = serviceProvider.GetRequiredService<MainPageViewModel>();
-        var settingsModel = serviceProvider.GetRequiredService<SettingsModel>();
         var localStorage = serviceProvider.GetRequiredService<ILocalStorage>();
 
-        Assert.That(settingsModel.Id, Is.Null);
+        await localStorage.DeleteAll();
+
+        var viewModel = await GetMainPageViewModel(serviceProvider);
 
         await viewModel.Save();
 
-        Assert.That(settingsModel.Id, Is.Not.Null);
+        var settingsModels = await localStorage.LoadAll();
 
-        var loadedSettingsModel = await localStorage.TryLoad(settingsModel.Id.Value);
-
-        Assert.That(loadedSettingsModel, Is.Not.Null.And.Property(nameof(SettingsModel.Id)).EqualTo(settingsModel.Id));
+        Assert.That(settingsModels, Has.Count.EqualTo(1));
     }
 
-    private MainPageViewModel CreateMainPageViewModel()
+    [Test]
+    public async Task TestEnsureModelLoaded()
     {
-        return CreateServiceProvider().GetRequiredService<MainPageViewModel>();
+        var serviceProvider = CreateServiceProvider();
+        var viewModel = serviceProvider.GetRequiredService<MainPageViewModel>();
+        var localStorage = serviceProvider.GetRequiredService<ILocalStorage>();
+
+        await localStorage.DeleteAll();
+
+        var notifications = new List<string?>();
+
+        viewModel.PropertyChanged += (_, args) => notifications.Add(args.PropertyName);
+
+        await viewModel.EnsureModelLoaded();
+
+        Assert.That(notifications, Is.EquivalentTo(new[] { "FirstName", "FullName", "LastName", "FullName", "Count", "IsReady" }));
+    }
+
+    private async Task<MainPageViewModel> GetMainPageViewModel()
+    {
+        var serviceProvider = CreateServiceProvider();
+
+        return await GetMainPageViewModel(serviceProvider);
+    }
+
+    private static async Task<MainPageViewModel> GetMainPageViewModel(IServiceProvider serviceProvider)
+    {
+        var result = serviceProvider.GetRequiredService<MainPageViewModel>();
+
+        await result.EnsureModelLoaded();
+
+        return result;
     }
 }
