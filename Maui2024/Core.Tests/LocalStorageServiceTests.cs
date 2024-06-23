@@ -7,105 +7,97 @@ namespace Core.Tests;
 public class LocalStorageServiceTests : TestsBase
 {
     [Test]
-    public void TestSaveAndLoad()
+    public async Task TestSaveAndLoad()
     {
-        var serviceProvider = CreateServiceProvider();
-        var localStorage = serviceProvider.GetRequiredService<ILocalStorage>();
-
+        var localStorage = await GetLocalStorage();
         var settingsModel = CreateSettingsModel();
 
         Assert.That(settingsModel.Id, Is.Null);
 
-        var saved = localStorage.Save(settingsModel);
+        var saved = await localStorage.Save(settingsModel);
         Assert.Multiple(() =>
         {
             Assert.That(saved, "Object was not saved");
             Assert.That(settingsModel.Id, Is.Not.Zero);
         });
 
-        var loadedSettingsModel = localStorage.Load(settingsModel.Id.Value);
+        var loadedSettingsModel = await localStorage.Load(settingsModel.Id.Value);
 
         Assert.That(loadedSettingsModel.Id, Is.EqualTo(settingsModel.Id));
     }
 
     [Test]
-    public void TestSaveAndTryLoad()
+    public async Task TestSaveAndTryLoad()
     {
-        var serviceProvider = CreateServiceProvider();
-        var localStorage = serviceProvider.GetRequiredService<ILocalStorage>();
-
+        var localStorage = await GetLocalStorage();
         var settingsModel = CreateSettingsModel();
 
         Assert.That(settingsModel.Id, Is.Null);
 
-        var saved = localStorage.Save(settingsModel);
+        var saved = await localStorage.Save(settingsModel);
         Assert.Multiple(() =>
         {
             Assert.That(saved, "Object was not saved");
             Assert.That(settingsModel.Id, Is.Not.Zero);
         });
 
-        var loaded = localStorage.TryLoad(settingsModel.Id.Value, out var loadedSettingsModel);
+        var loadedSettingsModel = await localStorage.TryLoad(settingsModel.Id.Value);
 
         Assert.Multiple(() =>
         {
-            Assert.That(loaded, $"Could not load item with Id = [{settingsModel.Id}]");
-            Assert.That(loadedSettingsModel.Id, Is.EqualTo(settingsModel.Id));
+            Assert.That(loadedSettingsModel, Is.Not.Null, $"Could not load item with Id = [{settingsModel.Id}]");
+            Assert.That(loadedSettingsModel!.Id, Is.EqualTo(settingsModel.Id));
         });
     }
 
     [Test]
-    public void TestSaveLoadAndDelete()
+    public async Task TestSaveLoadAndDelete()
     {
-        var serviceProvider = CreateServiceProvider();
-        var localStorage = serviceProvider.GetRequiredService<ILocalStorage>();
-
+        var localStorage = await GetLocalStorage();
         var settingsModel = CreateSettingsModel();
 
         Assert.That(settingsModel.Id, Is.Null);
 
-        var saved = localStorage.Save(settingsModel);
+        var saved = await localStorage.Save(settingsModel);
         Assert.Multiple(() =>
         {
             Assert.That(saved, "Object was not saved");
             Assert.That(settingsModel.Id, Is.Not.Zero);
         });
 
-        var loadedSettingsModel = localStorage.Load(settingsModel.Id.Value);
+        var loadedSettingsModel = await localStorage.Load(settingsModel.Id.Value);
 
         Assert.That(loadedSettingsModel.Id, Is.EqualTo(settingsModel.Id));
 
-        var deleted = localStorage.Delete(loadedSettingsModel);
+        var deleted = await localStorage.Delete(loadedSettingsModel);
 
         Assert.That(deleted, "Object was not deleted.");
 
-        var loaded = localStorage.TryLoad(settingsModel.Id.Value, out loadedSettingsModel);
+        var settingsModelWithId = await localStorage.TryLoad(settingsModel.Id.Value);
 
-        Assert.That(loaded, Is.False, "Object should no longer exist.");
+        Assert.That(settingsModelWithId, Is.Null, "Object should no longer exist.");
     }
 
     [Test]
-    public void TestDeleteAndLoadAll()
+    public async Task TestDeleteAndLoadAll()
     {
-        var serviceProvider = CreateServiceProvider();
-        var localStorage = serviceProvider.GetRequiredService<ILocalStorage>();
-
-        var deleted = localStorage.DeleteAll();
+        var localStorage = await GetLocalStorage();
+        var deleted = await localStorage.DeleteAll();
 
         Assert.That(deleted, "Could not delete all objects.");
 
-        var settingsModels = localStorage.LoadAll().ToList();
+        var settingsModels = await localStorage.LoadAll();
 
         Assert.That(settingsModels.Count, Is.EqualTo(0));
 
         for (var i = 0; i < 5; i++)
         {
-            var saved = localStorage.Save(CreateSettingsModel());
+            var saved = await localStorage.Save(CreateSettingsModel());
 
             Assert.That(saved, "Object was not saved.");
         }
 
-        settingsModels = localStorage.LoadAll().ToList();
+        settingsModels = await localStorage.LoadAll();
 
         Assert.That(settingsModels.Count, Is.EqualTo(5));
     }
@@ -114,6 +106,15 @@ public class LocalStorageServiceTests : TestsBase
     {
         return base.AddServices(serviceCollection)
             .AddSingleton(new LocalStorageSettings { DatabaseFilename = "Maui2024Tests.db3" });
+    }
+
+    private async Task<ILocalStorage> GetLocalStorage()
+    {
+        var serviceProvider = CreateServiceProvider();
+        var localStorage = serviceProvider.GetRequiredService<ILocalStorage>();
+
+        await localStorage.Initialize();
+        return localStorage;
     }
 
     private static SettingsModel CreateSettingsModel()

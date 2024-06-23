@@ -2,11 +2,12 @@ namespace Core.Services;
 
 public static class LocalStorageExtensions
 {
-    public static SettingsModel Load(this ILocalStorage localStorage, int id)
+    public static async Task<SettingsModel> Load(this ILocalStorage localStorage, int id)
     {
-        if (localStorage.TryLoad(id, out var settingsModel))
+        var item = await localStorage.TryLoad(id);
+        if (item != null)
         {
-            return settingsModel;
+            return item;
         }
 
         throw new InvalidOperationException($"Could not load object of type [{typeof(SettingsModel)}] with id [{id}].");
